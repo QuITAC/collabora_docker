@@ -1,0 +1,23 @@
+version: "3"
+
+networks:
+  proxy:
+    external: true
+    name: shared-proxy
+
+services:
+  # collabora
+  collabora-app:
+    image: collabora/code:latest
+    restart: always
+    cap_add:
+      - MKNOD
+    expose:
+      - 9980
+    environment:
+      - domain=cloud.queerreferat.ac
+      - VIRTUAL_HOST=office.queerreferat.ac
+    networks:
+      - proxy
+
+  # a separate nginx server might be needed
