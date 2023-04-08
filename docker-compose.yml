@@ -1,23 +1,41 @@
 version: "3"
 
+volumes:
+  collabora-app:
+
 networks:
   proxy:
     external: true
     name: shared-proxy
 
 services:
-  # collabora
+  # collabora itself
   collabora-app:
     image: collabora/code:latest
     restart: always
+    volumes:
+      - collabora-app:/var/www/html:z
     cap_add:
       - MKNOD
-    expose:
-      - 9980
     environment:
-      - domain=cloud.queerreferat.ac
+      - aliasgroup1=https://cloud\\.queerreferat\\.ac:443
+      - ssl.enable=false
+      - ssl.termination=true
+
+  # web server for collabora
+  collabora-server:
+    build: ./collabora-server
+    restart: always
+    volumes:
+      - collabora-app:/var/www/html:z,ro
+    environment:
       - VIRTUAL_HOST=office.queerreferat.ac
+      - LETSENCRYPT_HOST=office.queerreferat.ac
+      - LETSENCRYPT_EMAIL=<EMAIL>
+    depends_on:
+      - collabora-app
     networks:
       - proxy
+      - default
 
   # a separate nginx server might be needed
