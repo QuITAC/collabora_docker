@@ -28,10 +28,9 @@ services:
     restart: always
     volumes:
       - collabora-app:/var/www/html:z,ro
-    environment:
-      - VIRTUAL_HOST=office.queerreferat.ac
-      - LETSENCRYPT_HOST=office.queerreferat.ac
-      - LETSENCRYPT_EMAIL=<EMAIL>
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.collabora.rule=Host('office.queerreferat.ac')"
     depends_on:
       - collabora-app
     networks:
