@@ -30,7 +30,7 @@ services:
       - collabora-app:/var/www/html:z,ro
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.collabora.rule=Host('office.queerreferat.ac')"
+      - "traefik.http.routers.collabora.rule=Host(`office.queerreferat.ac`)"
     depends_on:
       - collabora-app
     networks:
